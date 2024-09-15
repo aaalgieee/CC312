@@ -1,0 +1,15 @@
+[
+    {
+        "id": "7b6401e3-dbe5-4563-9995-3a8de8f7116c",
+        "name": "Intrams",
+        "date": "2024-10-10T00:00:00.000",
+        "location": "UIC",
+        "attendanceRecords": [
+            {
+                "studentId": "2001",
+                "studentName": "JOshua",
+                "time": "2024-09-16T02:15:40.791572"
+            }
+        ]
+    }
+]
