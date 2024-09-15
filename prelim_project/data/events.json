@@ -1,14 +1,47 @@
 [
     {
-        "id": "7b6401e3-dbe5-4563-9995-3a8de8f7116c",
+        "id": "dcce2741-19e8-4695-8b51-ea0a26d5f5a1",
         "name": "Intrams",
         "date": "2024-10-10T00:00:00.000",
-        "location": "UIC",
+        "location": "UIC Banke (Main)",
         "attendanceRecords": [
             {
                 "studentId": "2001",
-                "studentName": "JOshua",
-                "time": "2024-09-16T02:15:40.791572"
+                "studentName": "Ralph",
+                "time": "2024-09-16T02:22:18.704740"
+            },
+            {
+                "studentId": "2002",
+                "studentName": "Joshua",
+                "time": "2024-09-16T02:22:23.977027"
+            },
+            {
+                "studentId": "2003",
+                "studentName": "John",
+                "time": "2024-09-16T02:22:28.035010"
+            }
+        ]
+    },
+    {
+        "id": "1dc36891-ced0-48f0-a5e7-5e6ae7aabff0",
+        "name": "College Week",
+        "date": "2025-02-01T00:00:00.000",
+        "location": "UIC Annex",
+        "attendanceRecords": [
+            {
+                "studentId": "2006",
+                "studentName": "Jane",
+                "time": "2024-09-16T02:22:53.475116"
+            },
+            {
+                "studentId": "2019",
+                "studentName": "Al Gabriel",
+                "time": "2024-09-16T02:22:58.117330"
+            },
+            {
+                "studentId": "200001",
+                "studentName": "Ellis John Doe",
+                "time": "2024-09-16T02:23:09.148580"
             }
         ]
     }
