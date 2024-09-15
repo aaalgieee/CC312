@@ -1,7 +1,7 @@
 name: prelim_project
 description: Attendance System for University Events
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/aaalgieee/CC312/tree/main/prelim_project
 
 environment:
   sdk: ^3.5.2
