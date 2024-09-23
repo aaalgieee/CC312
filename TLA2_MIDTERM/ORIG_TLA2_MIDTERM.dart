@@ -5,36 +5,31 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const CupertinoApp(
-      title: 'State Management',
-      home: CounterPage(),
+      title: 'TLA 2 - State Management',
+      home: AnimatedTextApp(),
     );
   }
 }
 
-class CounterPage extends StatefulWidget {
-  const CounterPage({Key? key}) : super(key: key);
+class AnimatedTextApp extends StatefulWidget {
+  const AnimatedTextApp({super.key});
 
   @override
-  _CounterPageState createState() => _CounterPageState();
+  _AnimatedTextAppState createState() => _AnimatedTextAppState();
 }
 
-class _CounterPageState extends State<CounterPage> {
-  int _counter = 0;
+class _AnimatedTextAppState extends State<AnimatedTextApp> {
+  String _displayText = 'Hello World!';
+  final TextEditingController _textController = TextEditingController();
 
-  void _incrementCounter() {
+  void _updateText() {
     setState(() {
-      _counter++;
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      _counter--;
+      _displayText = _textController.text;
     });
   }
 
@@ -42,39 +37,62 @@ class _CounterPageState extends State<CounterPage> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
-        middle: Text('State Management'),
+        middle: Text('TLA 2 - State Management'),
       ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Counter Value:',
-              style: TextStyle(fontSize: 20),
-            ),
-            Text(
-              '$_counter',
-              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CupertinoButton(
-                  onPressed: _decrementCounter,
-                  child: const Icon(CupertinoIcons.minus_circle),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.0, 0.5),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                  );
+                },
+                child: Text(
+                  _displayText,
+                  key: ValueKey<String>(_displayText),
+                  style: const TextStyle(fontSize:35, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                  
                 ),
-                const SizedBox(width: 20),
-                CupertinoButton(
-                  onPressed: _incrementCounter,
-                  child: const Icon(CupertinoIcons.plus_circle),
-                ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 30),
+              CupertinoTextField(
+                controller: _textController,
+                placeholder: 'Enter new text',
+                onSubmitted: (_) => _updateText(),
+                padding: const EdgeInsets.all(12.0),
+                style: const TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 20),
+              CupertinoButton.filled(
+                onPressed: () {
+                  _updateText();
+                  _textController.clear();
+                },
+                child: const Text('Update Text'),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-}
 
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+}
