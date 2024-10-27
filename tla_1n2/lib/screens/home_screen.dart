@@ -1,16 +1,40 @@
-// lib/main.dart remains the same
-
 // lib/screens/home_screen.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tla_1n2/providers/todo_provider.dart';
-import 'package:tla_1n2/widgets/cupterino_progress_bar.dart';
+import 'package:tla_1n2/widgets/cupertino_progress_bar.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  late TextEditingController _textController;
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  void _handleSubmit(String value) {
+    if (value.isNotEmpty) {
+      ref.read(todoProvider.notifier).addTodo(value);
+      _textController.clear();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final todos = ref.watch(todoProvider).todos;
     final completedTodos = todos.where((todo) => todo.isCompleted).length;
 
@@ -88,17 +112,22 @@ class HomeScreen extends ConsumerWidget {
                   ],
                 ),
                 child: CupertinoTextField(
+                  controller: _textController,
                   padding: const EdgeInsets.all(16),
                   placeholder: 'Add a new task',
                   placeholderStyle: TextStyle(
                     color: CupertinoColors.placeholderText.resolveFrom(context),
                   ),
                   decoration: null,
-                  onSubmitted: (value) {
-                    if (value.isNotEmpty) {
-                      ref.read(todoProvider.notifier).addTodo(value);
-                    }
-                  },
+                  onSubmitted: _handleSubmit,
+                  suffix: CupertinoButton(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: const Icon(
+                      CupertinoIcons.add_circled_solid,
+                      color: CupertinoColors.activeBlue,
+                    ),
+                    onPressed: () => _handleSubmit(_textController.text),
+                  ),
                 ),
               ),
             ),
