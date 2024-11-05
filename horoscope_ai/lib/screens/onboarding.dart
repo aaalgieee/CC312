@@ -91,16 +91,16 @@ class Onboarding extends StatelessWidget {
                 ),
               ),
               Text(
-                'Know your Zodiac',
+                'Welcome to Astro Buddy!',
                 style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: textColor(context)),
               ),
               const SizedBox(height: 10),
               Text(
                 'Find your zodiac sign and learn about your traits and lucky numbers or lucky colors which bring good fortune to you. And also you can read your horoscope and plan your day.',
-                style: TextStyle(fontSize: 14, color: textColor(context)),
+                style: TextStyle(fontSize: 15, color: textColor(context)),
               ),
               const SizedBox(height: 20),
               CupertinoButton(
@@ -117,7 +117,7 @@ class Onboarding extends StatelessWidget {
                     Text(
                       'Get Started',
                       style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: textColor(context)),
                     ),

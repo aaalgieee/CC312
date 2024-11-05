@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
                 'Good Fortune!',
                 style: TextStyle(
                   color: textColor(context),
-                  fontSize: 24.0,
+                  fontSize: 32.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                 'What you want to know?',
                 style: TextStyle(
                   color: textColor(context),
-                  fontSize: 18.0,
+                  fontSize: 20.0,
                 ),
               ),
               SizedBox(height: 32),
@@ -76,8 +76,8 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 16),
               Wrap(
-                spacing: 12.0,
-                runSpacing: 12.0,
+                spacing: 15.0,
+                runSpacing: 20.0,
                 children: [
                   _buildHoroscopeButton(context, 'Pisces',
                       _selectedSign == 'Pisces', _onSelected),
@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
           reading,
           style: TextStyle(
             color: isSelected ? CupertinoColors.white : CupertinoColors.black,
-            fontSize: 16.0,
+            fontSize: 18.0,
           ),
         ),
       ),
@@ -143,12 +143,23 @@ class _HomePageState extends State<HomePage> {
           color: isSelected ? const Color(0xFF4c4b4a) : const Color(0xFFf2f2f2),
           borderRadius: BorderRadius.circular(8.0),
         ),
-        child: Text(
-          sign,
-          style: TextStyle(
-            color: isSelected ? CupertinoColors.white : CupertinoColors.black,
-            fontSize: 16.0,
-          ),
+        child: Column(
+          children: [
+            Image.asset(
+              'assets/signs/$sign.png',
+              height: 55.0,
+              width: 55.0,
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              sign,
+              style: TextStyle(
+                color:
+                    isSelected ? CupertinoColors.white : CupertinoColors.black,
+                fontSize: 16.0,
+              ),
+            ),
+          ],
         ),
       ),
     );
