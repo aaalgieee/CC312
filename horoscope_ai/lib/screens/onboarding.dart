@@ -47,7 +47,7 @@ class _ChevronAnimationState extends State<ChevronAnimation>
 
     _controller.forward();
 
-    _checkInternetConnectiion();
+    //_checkInternetConnectiion();
   }
 
   Future<void> _checkInternetConnectiion() async {
@@ -58,12 +58,12 @@ class _ChevronAnimationState extends State<ChevronAnimation>
         context: context,
         builder: (BuildContext context) {
           return CupertinoAlertDialog(
-            title: Text('No Internet Connection'),
-            content: Text(
+            title: const Text('No Internet Connection'),
+            content: const Text(
                 'Please check your internet connection and try again later.'),
             actions: [
               CupertinoDialogAction(
-                child: Text('OK'),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -74,6 +74,8 @@ class _ChevronAnimationState extends State<ChevronAnimation>
       );
     }
   }
+
+   
 
   @override
   void dispose() {
