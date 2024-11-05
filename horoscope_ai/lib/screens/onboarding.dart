@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:horoscope_ai/screens/home.dart';
 import 'dart:math' as math;
 import 'package:horoscope_ai/screens/theme.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ChevronAnimation extends StatefulWidget {
   final Color textColor;
@@ -45,6 +46,33 @@ class _ChevronAnimationState extends State<ChevronAnimation>
       });
 
     _controller.forward();
+
+    _checkInternetConnectiion();
+  }
+
+  Future<void> _checkInternetConnectiion() async {
+    final connectivity = Connectivity();
+    final result = await connectivity.checkConnectivity();
+    if (result == ConnectivityResult.none) {
+      showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Text('No Internet Connection'),
+            content: Text(
+                'Please check your internet connection and try again later.'),
+            actions: [
+              CupertinoDialogAction(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
