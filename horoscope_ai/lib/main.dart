@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:horoscope_ai/screens/onboarding.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
