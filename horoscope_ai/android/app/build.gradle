@@ -29,7 +29,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        resValue "string", "GEMINI_API_KEY", dotenv.env['GEMINI_API_KEY']
     }
 
     buildTypes {
