@@ -46,35 +46,7 @@ class _ChevronAnimationState extends State<ChevronAnimation>
       });
 
     _controller.forward();
-
-    //_checkInternetConnectiion();
   }
-
-  /*Future<void> _checkInternetConnectiion() async {
-    final connectivity = Connectivity();
-    final result = await connectivity.checkConnectivity();
-    if (result == ConnectivityResult.none) {
-      showCupertinoDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return CupertinoAlertDialog(
-            title: const Text('No Internet Connection'),
-            content: const Text(
-                'Please check your internet connection and try again later.'),
-            actions: [
-              CupertinoDialogAction(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-*/
 
   @override
   void dispose() {
