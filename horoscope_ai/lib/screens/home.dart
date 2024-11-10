@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                 'What you want to know?',
                 style: TextStyle(
                   color: textColor(context),
-                  fontSize: 15.0,
+                  fontSize: 18.0,
                 ),
               ),
               SizedBox(height: 20),
@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 15),
               Text(
-                'Select your horoscope:',
+                'Select your sign:',
                 style: TextStyle(
                   color: textColor(context),
                   fontSize: 18.0,
@@ -171,30 +171,42 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
 
-Widget _buildBottomButton(BuildContext context) {
-  return Container(
-    width: double.infinity,
-    padding: EdgeInsets.all(16.0),
-    child: CupertinoButton(
-      color: const Color(0xFF1f9a61),
-      child: Text(
-        'Get Your Reading',
-        style: TextStyle(
-          color: CupertinoColors.white,
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
+  Widget _buildBottomButton(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.0),
+      child: CupertinoButton(
+        color: const Color(0xFF1f9a61),
+        onPressed: _selectedSign.isEmpty
+            ? null
+            : () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => Reading(
+                      selectedSign: _selectedSign,
+                      onBack: () {
+                        setState(() {
+                          _selectedSign = '';
+                          _selectedReading = '';
+                        });
+                      },
+                    ),
+                  ),
+                );
+              },
+        child: Text(
+          'Get Your Reading',
+          style: TextStyle(
+            color: _selectedSign.isEmpty
+                ? CupertinoColors.black
+                : CupertinoColors.white,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      onPressed: () {
-        Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => Reading(),
-          ),
-        );
-      },
-    ),
-  );
+    );
+  }
 }
