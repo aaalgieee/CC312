@@ -1,16 +1,19 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'theme.dart';
 
 class Reading extends StatelessWidget {
   final String selectedSign;
-  final VoidCallback onBack; // Add this line
+  final String horoscopeText;
+  final VoidCallback onBack;
 
   const Reading({
     super.key,
     required this.selectedSign,
-    required this.onBack, // Add this line
+    required this.horoscopeText,
+    required this.onBack,
   });
 
   // Map zodiac signs to their date ranges
@@ -30,6 +33,42 @@ class Reading extends StatelessWidget {
       'Pisces': '19 Feb - 20 Mar',
     };
     return dateRanges[sign] ?? '';
+  }
+
+  Widget _buildMarkdownContent(BuildContext context) {
+    // Remove first title by splitting on first occurrence of \n\n
+    final parts = horoscopeText.split('\n\n');
+    final contentWithoutFirstTitle =
+        parts.length > 1 ? parts.sublist(1).join('\n\n') : horoscopeText;
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: MarkdownBody(
+        data: contentWithoutFirstTitle,
+        styleSheet: MarkdownStyleSheet(
+          p: TextStyle(
+            color: textColor(context),
+            fontSize: 16,
+            height: 1.5,
+          ),
+          h2: TextStyle(
+            color: textColor(context),
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            height: 2,
+          ),
+          listBullet: TextStyle(
+            color: textColor(context),
+            fontSize: 16,
+          ),
+          blockquote: TextStyle(
+            color: textColor(context).withOpacity(0.8),
+            fontSize: 16,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -65,78 +104,104 @@ class Reading extends StatelessWidget {
         ),
       ),
       child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16.0),
-              Center(
-                child: Image.asset(
-                  'assets/signs/$selectedSign.png',
-                  width: 250,
-                  height: 250,
+        child: Column(
+          children: [
+            // Non-scrollable header
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/signs/$selectedSign.png',
+                      width: 250,
+                      height: 250,
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          selectedSign,
+                          style: CupertinoTheme.of(context)
+                              .textTheme
+                              .navTitleTextStyle
+                              .copyWith(
+                                  fontWeight: FontWeight.bold, fontSize: 40),
+                        ),
+                        Text(
+                          getDateRange(selectedSign),
+                          style: CupertinoTheme.of(context)
+                              .textTheme
+                              .navTitleTextStyle
+                              .copyWith(
+                                  color: CupertinoColors.systemGrey,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Scrollable content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 16.0),
+                    decoration: BoxDecoration(
+                      color: CupertinoColors.systemBackground.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(12.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: CupertinoColors.systemGrey.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          CupertinoColors.systemBackground,
+                          CupertinoColors.systemGrey6,
+                        ],
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            horoscopeText.contains('Error')
+                                ? 'Please try again'
+                                : 'Here is your fortune reading:',
+                            style: CupertinoTheme.of(context)
+                                .textTheme
+                                .navTitleTextStyle
+                                .copyWith(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+                          child: _buildMarkdownContent(context),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 16.0),
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      selectedSign,
-                      style: CupertinoTheme.of(context)
-                          .textTheme
-                          .navTitleTextStyle
-                          .copyWith(fontWeight: FontWeight.bold, fontSize: 40),
-                    ),
-                    Text(
-                      getDateRange(selectedSign),
-                      style: CupertinoTheme.of(context)
-                          .textTheme
-                          .navTitleTextStyle
-                          .copyWith(
-                              color: CupertinoColors.systemGrey,
-                              fontSize: 20,
-                              fontWeight: FontWeight.normal),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              CupertinoFormSection(
-                header: Text('Lucky Numbers'),
-                children: [
-                  CupertinoFormRow(
-                    child: Text('5, 7 and 3'),
-                  ),
-                ],
-              ),
-              CupertinoFormSection(
-                header: Text('Unlucky Numbers'),
-                children: [
-                  CupertinoFormRow(
-                    child: Text('9 and 1'),
-                  ),
-                ],
-              ),
-              CupertinoFormSection(
-                header: Text('Lucky Colour'),
-                children: [
-                  CupertinoFormRow(
-                    child: Text('Red and Blue'),
-                  ),
-                ],
-              ),
-              CupertinoFormSection(
-                header: Text('Unlucky Colour'),
-                children: [
-                  CupertinoFormRow(
-                    child: Text('Black'),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

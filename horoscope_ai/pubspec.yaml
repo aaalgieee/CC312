@@ -38,6 +38,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_dotenv: ^5.2.1
   flutter_launcher_icons: ^0.14.1
+  google_generative_ai: ^0.4.6
+  logger: ^2.4.0
+  flutter_markdown: ^0.7.4+1
+  connectivity_plus: ^6.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -59,6 +63,7 @@ flutter:
     - assets/
     - assets/icon/
     - assets/signs/
+    - .env
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

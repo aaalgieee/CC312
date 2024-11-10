@@ -1,8 +1,11 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unused_field
 
 import 'package:flutter/cupertino.dart';
 import 'theme.dart';
+import 'package:logger/logger.dart';
 import 'reading.dart';
+import '/services/gemini_service.dart'; // Add this import
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,7 +17,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _selectedSign = '';
-  String _selectedReading = '';
+  bool _isLoading = false;
+  String _horoscopeText = '';
 
   void _onSelected(String sign) {
     setState(() {
@@ -22,10 +26,80 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void onSelected(String reading) {
+  Future<void> _generateHoroscope() async {
     setState(() {
-      _selectedReading = reading;
+      _isLoading = true;
     });
+
+    try {
+      final horoscope = await GeminiService.getHoroscopeReading(_selectedSign);
+      setState(() {
+        _horoscopeText = horoscope;
+      });
+    } catch (e) {
+      Logger().e('Error generating horoscope: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<bool> _checkInternet() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult != ConnectivityResult.none;
+  }
+
+  void _showNoInternetDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Text('No Internet Connection'),
+        content: Text('Please check your internet connection and try again.'),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () => Navigator.pop(context),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _navigateToReading() async {
+    final hasInternet = await _checkInternet();
+
+    if (!hasInternet) {
+      _showNoInternetDialog();
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await _generateHoroscope();
+      if (!mounted) return;
+
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => Reading(
+            selectedSign: _selectedSign,
+            horoscopeText: _horoscopeText,
+            onBack: () {
+              setState(() {
+                _selectedSign = '';
+              });
+            },
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   @override
@@ -38,12 +112,12 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 10),
+              SizedBox(height: 25),
               Text(
                 'Good Fortune!',
                 style: TextStyle(
                   color: textColor(context),
-                  fontSize: 32.0,
+                  fontSize: 40.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -51,29 +125,17 @@ class _HomePageState extends State<HomePage> {
               Text(
                 'What you want to know?',
                 style: TextStyle(
-                  color: textColor(context),
-                  fontSize: 18.0,
-                ),
+                    color: textColor(context),
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w300),
               ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildButton(context, 'Horoscope',
-                      _selectedReading == 'Horoscope', onSelected),
-                  _buildButton(context, 'Palmistry',
-                      _selectedReading == 'Palmistry', onSelected),
-                  _buildButton(context, 'Physiognomy',
-                      _selectedReading == 'Physiognomy', onSelected),
-                ],
-              ),
-              SizedBox(height: 15),
+              SizedBox(height: 35),
               Text(
                 'Select your sign:',
                 style: TextStyle(
-                  color: textColor(context),
-                  fontSize: 18.0,
-                ),
+                    color: textColor(context),
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 15.0),
               SizedBox(
@@ -119,27 +181,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildButton(BuildContext context, String reading, bool isSelected,
-      Function(String) onSelected) {
-    return GestureDetector(
-      onTap: () => onSelected(reading),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF4c4b4a) : const Color(0xFFf2f2f2),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Text(
-          reading,
-          style: TextStyle(
-            color: isSelected ? CupertinoColors.white : CupertinoColors.black,
-            fontSize: 18.0,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildHoroscopeButton(BuildContext context, String sign,
       bool isSelected, Function(String) onSelected) {
     return GestureDetector(
@@ -178,34 +219,36 @@ class _HomePageState extends State<HomePage> {
       padding: EdgeInsets.all(16.0),
       child: CupertinoButton(
         color: const Color(0xFF1f9a61),
-        onPressed: _selectedSign.isEmpty
-            ? null
-            : () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => Reading(
-                      selectedSign: _selectedSign,
-                      onBack: () {
-                        setState(() {
-                          _selectedSign = '';
-                          _selectedReading = '';
-                        });
-                      },
+        onPressed:
+            _selectedSign.isEmpty || _isLoading ? null : _navigateToReading,
+        child: _isLoading
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  CupertinoActivityIndicator(
+                    color: CupertinoColors.black,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    'Reading your futune...',
+                    style: TextStyle(
+                      color: CupertinoColors.black,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                );
-              },
-        child: Text(
-          'Get Your Reading',
-          style: TextStyle(
-            color: _selectedSign.isEmpty
-                ? CupertinoColors.black
-                : CupertinoColors.white,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+                ],
+              )
+            : Text(
+                'Get Your Reading',
+                style: TextStyle(
+                  color: _selectedSign.isEmpty
+                      ? CupertinoColors.black
+                      : CupertinoColors.white,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
       ),
     );
   }
