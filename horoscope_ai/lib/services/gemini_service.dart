@@ -1,26 +1,13 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:horoscope_ai/config/app_config.dart';
 
 class GeminiService {
-  static GenerativeModel? _model;
-
-  static void initialize() {
-    final apiKey = dotenv.env['GEMINI_API_KEY'];
-    if (apiKey == null || apiKey.isEmpty) {
-      throw Exception('GEMINI_API_KEY not found in environment variables');
-    }
-
-    _model = GenerativeModel(
-      model: 'gemini-1.5-flash',
-      apiKey: apiKey,
-    );
-  }
+  static final GenerativeModel _model = GenerativeModel(
+    model: 'gemini-1.5-flash',
+    apiKey: AppConfig.geminiApiKey,
+  );
 
   static Future<String> getHoroscopeReading(String sign) async {
-    if (_model == null) {
-      initialize();
-    }
-
     try {
       final prompt = '''
         Your are a fortune teller, generate a personalized horoscope reading for $sign.
@@ -37,7 +24,7 @@ class GeminiService {
         Format the response in clear sections.
       ''';
 
-      final response = await _model!.generateContent([
+      final response = await _model.generateContent([
         Content.text(prompt),
       ]);
 
