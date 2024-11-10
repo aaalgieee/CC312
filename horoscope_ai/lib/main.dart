@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:horoscope_ai/screens/onboarding.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   // Ensure Flutter bindings are initialized before using platform channels
@@ -14,7 +15,7 @@ void main() async {
   // Initialize other services
   await dotenv.load(fileName: ".env");
 
-  runApp(const MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'theme.dart';
 
@@ -73,136 +75,134 @@ class Reading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Platform.isIOS
+        ? _buildCupertinoLayout(context)
+        : _buildMaterialLayout(context);
+  }
+
+  Widget _buildCupertinoLayout(BuildContext context) {
     return CupertinoPageScaffold(
       backgroundColor: backgroundColor(context),
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: backgroundColor(context),
-        border: null,
-        leading: CupertinoButton(
-          padding: EdgeInsets.zero,
-          onPressed: () {
-            onBack(); // Call the callback
-            Navigator.of(context).pop();
-          },
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                CupertinoIcons.back,
-                color: textColor(context),
-                size: 28,
-              ),
-              Text(
-                'Back',
-                style: TextStyle(
-                  color: textColor(context),
-                  fontSize: 17,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
       child: SafeArea(
         child: Column(
           children: [
-            // Non-scrollable header
+            // Custom back button
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/signs/$selectedSign.png',
-                      width: 250,
-                      height: 250,
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  Center(
-                    child: Column(
-                      children: [
-                        Text(
-                          selectedSign,
-                          style: CupertinoTheme.of(context)
-                              .textTheme
-                              .navTitleTextStyle
-                              .copyWith(
-                                  fontWeight: FontWeight.bold, fontSize: 40),
-                        ),
-                        Text(
-                          getDateRange(selectedSign),
-                          style: CupertinoTheme.of(context)
-                              .textTheme
-                              .navTitleTextStyle
-                              .copyWith(
-                                  color: CupertinoColors.systemGrey,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.normal),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Scrollable content
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 16.0),
-                    decoration: BoxDecoration(
-                      color: CupertinoColors.systemBackground.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(12.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: CupertinoColors.systemGrey.withOpacity(0.1),
-                          blurRadius: 10,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          CupertinoColors.systemBackground,
-                          CupertinoColors.systemGrey6,
-                        ],
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    onBack();
+                    Navigator.of(context).pop();
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        CupertinoIcons.back,
+                        color: textColor(context),
+                        size: 28,
                       ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            horoscopeText.contains('Error')
-                                ? 'Please try again'
-                                : 'Here is your fortune reading:',
-                            style: CupertinoTheme.of(context)
-                                .textTheme
-                                .navTitleTextStyle
-                                .copyWith(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ),
+                      Text(
+                        'Back',
+                        style: TextStyle(
+                          color: textColor(context),
+                          fontSize: 17,
                         ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
-                          child: _buildMarkdownContent(context),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
+            // Rest of your existing content
+            Expanded(
+              child: _buildContent(context),
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildMaterialLayout(BuildContext context) {
+    return Scaffold(
+      backgroundColor: backgroundColor(context),
+      appBar: AppBar(
+        backgroundColor: backgroundColor(context),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: onBack,
+        ),
+        title: Text('$selectedSign Reading'),
+      ),
+      body: _buildContent(context),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        children: [
+          // Non-scrollable header
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Center(
+                  child: Image.asset(
+                    'assets/signs/$selectedSign.png',
+                    width: 250,
+                    height: 250,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  selectedSign,
+                  style: TextStyle(
+                    color: textColor(context),
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  getDateRange(selectedSign),
+                  style: TextStyle(
+                    color: textColor(context).withOpacity(0.7),
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Scrollable content in circular container
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: CupertinoColors.systemBackground.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: CupertinoColors.systemGrey.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: _buildMarkdownContent(context),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
