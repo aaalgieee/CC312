@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'theme.dart';
 
@@ -75,70 +73,56 @@ class Reading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Platform.isIOS
-        ? _buildCupertinoLayout(context)
-        : _buildMaterialLayout(context);
-  }
-
-  Widget _buildCupertinoLayout(BuildContext context) {
     return CupertinoPageScaffold(
       backgroundColor: backgroundColor(context),
       child: SafeArea(
-        child: Column(
-          children: [
-            // Custom back button
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    onBack();
-                    Navigator.of(context).pop();
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        CupertinoIcons.back,
-                        color: textColor(context),
-                        size: 28,
-                      ),
-                      Text(
-                        'Back',
-                        style: TextStyle(
+        child: DefaultTextStyle(
+          style: TextStyle(
+            color: textColor(context),
+            fontFamily: '.SF Pro Text',
+            decoration: TextDecoration.none,
+          ),
+          child: Column(
+            children: [
+              // Custom back button
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      onBack();
+                      Navigator.of(context).pop();
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          CupertinoIcons.back,
                           color: textColor(context),
-                          fontSize: 17,
+                          size: 28,
                         ),
-                      ),
-                    ],
+                        Text(
+                          'Back',
+                          style: TextStyle(
+                            color: textColor(context),
+                            fontSize: 17,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            // Rest of your existing content
-            Expanded(
-              child: _buildContent(context),
-            ),
-          ],
+              // Rest of your existing content
+              Expanded(
+                child: _buildContent(context),
+              ),
+            ],
+          ),
         ),
       ),
-    );
-  }
-
-  Widget _buildMaterialLayout(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor(context),
-      appBar: AppBar(
-        backgroundColor: backgroundColor(context),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: onBack,
-        ),
-        title: Text('$selectedSign Reading'),
-      ),
-      body: _buildContent(context),
     );
   }
 

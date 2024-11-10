@@ -78,56 +78,64 @@ class Onboarding extends StatelessWidget {
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Center(
-                  child: CustomPaint(
-                    painter: ConstellationPainter(
-                        isDarkMode:
-                            isDarkMode(context)), // Pass isDarkMode here
-                    size: Size(MediaQuery.of(context).size.width * 0.8, 300),
+          child: DefaultTextStyle(
+            style: TextStyle(
+              color: textColor(context),
+              fontFamily: '.SF Pro Text',
+              decoration: TextDecoration.none,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: CustomPaint(
+                      painter: ConstellationPainter(
+                          isDarkMode:
+                              isDarkMode(context)), // Pass isDarkMode here
+                      size: Size(MediaQuery.of(context).size.width * 0.8, 300),
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                'Welcome to Astro Buddy!',
-                style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: textColor(context)),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Find your zodiac sign and learn about your traits and lucky numbers or lucky colors which bring good fortune to you. And also you can read your horoscope and plan your day.',
-                style: TextStyle(fontSize: 15, color: textColor(context)),
-              ),
-              const SizedBox(height: 20),
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    CupertinoPageRoute(builder: (context) => const HomePage()),
-                    (route) => false,
-                  );
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      'Get Started',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: textColor(context)),
-                    ),
-                    const SizedBox(width: 10),
-                    ChevronAnimation(textColor: textColor(context))
-                  ],
+                Text(
+                  'Welcome to Astro Buddy!',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: textColor(context)),
                 ),
-              ),
-            ],
+                const SizedBox(height: 10),
+                Text(
+                  'Find your zodiac sign and learn about your traits and lucky numbers or lucky colors which bring good fortune to you. And also you can read your horoscope and plan your day.',
+                  style: TextStyle(fontSize: 15, color: textColor(context)),
+                ),
+                const SizedBox(height: 20),
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => const HomePage()),
+                      (route) => false,
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        'Get Started',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: textColor(context)),
+                      ),
+                      const SizedBox(width: 10),
+                      ChevronAnimation(textColor: textColor(context))
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
