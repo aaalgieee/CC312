@@ -1,12 +1,10 @@
 // ignore_for_file: prefer_const_constructors, unused_field
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'theme.dart';
 import 'reading.dart';
 import '/providers.dart';
-import 'dart:io';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
