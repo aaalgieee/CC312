@@ -50,4 +50,37 @@ class GeminiService {
       return 'Error: Unable to generate horoscope. Please check your internet connection and try again.';
     }
   }
+
+  static Future<String> summarizeHoroscope(String horoscopeText) async {
+    if (_model == null) {
+      initialize();
+    }
+
+    try {
+      final prompt = '''
+        Summarize the key points from this horoscope reading in 250 Characters. 
+        Make it 250 characters total:
+        $horoscopeText
+      ''';
+
+      final response = await _model!.generateContent([
+        Content.text(prompt),
+      ]);
+
+      if (response.text == null || response.text!.isEmpty) {
+        return 'Your stars align for positive changes. Focus on personal growth today. Trust your instincts moving forward.';
+      }
+
+      // Ensure we don't exceed length constraints
+      String summary = response.text!;
+      if (summary.length > 250) {
+        summary = '${summary.substring(0, 243)}...';
+      }
+
+      return summary;
+    } catch (e) {
+      // Return a generic summary if generation fails
+      return 'The stars suggest positive opportunities ahead. Take time to reflect on your goals. Trust your inner wisdom to guide you forward.';
+    }
+  }
 }

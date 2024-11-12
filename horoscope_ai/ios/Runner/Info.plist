@@ -47,5 +47,7 @@
 	<true/>
 	<key>GEMINI_API_KEY</key>
 	<string>${GEMINI_API_KEY}</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs access to save horoscope images to your photo library</string>
 </dict>
 </plist>
