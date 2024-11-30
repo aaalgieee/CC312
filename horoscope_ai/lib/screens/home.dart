@@ -39,7 +39,7 @@ class HomePage extends ConsumerWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'What you want to know?',
+                    'What do you want to know?',
                     style: TextStyle(
                       color: textColor(context),
                       fontSize: 20.0,
@@ -169,7 +169,7 @@ class HomePage extends ConsumerWidget {
                                   ),
                                   SizedBox(width: 8),
                                   Text(
-                                    'Reading your futune...',
+                                    'Reading your fortune...',
                                     style: TextStyle(
                                       color: CupertinoColors.black,
                                       fontSize: 18.0,
